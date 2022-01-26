@@ -1,0 +1,159 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Weather</title>
+    <link rel="stylesheet" href="css/all.min.css">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="weather-style.css">
+    <style>
+        #time{
+            font-size: 30px;
+        }
+
+        #date{
+            font-size: 30px;
+        }
+        #city-name{
+            font-size: 30px;
+        }
+        .main{
+            background-color: rgb(25, 238, 121);
+            height: auto;
+            margin-top: 80px;
+        }
+        .weather-details{
+            font-size: 20px;
+        }
+        h2{
+            color: white;
+        }
+
+    </style>
+
+</head>
+<body>
+    <div class="container-fluid bg-dark pd-2">
+        <div class="row">
+        <div class="col-md-6 pl-4 pt-4">
+            <h2 >Beta Weather's Today</h2>
+        </div>
+        <div class="col-md-4 header pt-4">
+           
+            <form class="form-inline mx-auto " name="form">
+                
+                <input type="text"  class="form-control" id="searchword" placeholder="Enter City Name">
+               
+                <button type="submit" class="btn btn-secondary">Submit</button>
+              </form>
+        </div>
+        <div class="col-md-2">
+
+        </div>
+    </div>
+    </div>
+    <div class="container main">
+        <div class="row">
+            <div class="col-md-8 ">
+                <div class="header-description">
+                    <div class="header-content"> </div>
+                    <div id="date"></div>
+                    
+                   
+                </div>
+            <div  id="temp" style="font-size:50; color: blue;" ></div>
+            <div class="weather-details">
+                <div id="city-name"> </div>
+                <div id="temperature"> </div>
+                <div id="humidity"></div>
+                <div id="wind"></div>
+                <div id="pressure"></div>
+                
+                
+            </div>
+            </div>
+            <div class="col-md-4">
+                <div id="time" style="display: inline;"></div>
+                <div id="cloud" style="color:white; font-size: 70px; margin-top: 30px;"></div>
+                <div id="main2"></div>
+                <div id="description"></div>
+                <div id="timezone"></div>
+                <div id="lat"></div>
+                <div id="lon"></div>
+
+                
+
+            </div>
+
+        </div>
+        
+</div>
+
+
+    <script>
+        var date=new Date();
+        var days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+        var years = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+        document.getElementById("date").innerHTML = days[date.getDay()] + ", " + date.getDate() + " " + years[date.getMonth()] +
+            " " + date.getFullYear();
+        
+            var time=new Date();
+            if( time.getHours()>=0 && time.getHours()<12){
+                setInterval(todayDate, 1000);
+                function todayDate(){
+                    var time=new Date();
+                    document.getElementById("time").innerHTML=time.getHours()+" "+time.getMinutes()+" "+time.getSeconds()+" "+"AM";
+                    
+                }
+            }
+            else{ setInterval(todayDate, 1000);
+                function todayDate(){
+                    var time=new Date();
+                    document.getElementById("time").innerHTML=time.getHours()+":"+time.getMinutes()+":"+time.getSeconds()+" "+"PM";
+                    
+                }
+
+            }
+
+
+    
+    
+    form.addEventListener('submit', 
+    function(e){
+        e.preventDefault();
+        let searchword=document.getElementById('searchword').value;
+        weather(searchword);
+    }
+    );
+    async function weather(city){
+    const key="8267b1ded9e228525e9a23e4ebb5011f";
+    const response= await fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${key}`);
+    const data= await response.json();
+    console.log(data.name);
+    
+    document.getElementById('city-name').innerHTML=data.name+" "+ "Weather";
+    
+    document.getElementById('humidity').innerHTML="Humidity:"+" "+data.main.humidity+"%";
+    document.getElementById('wind').innerHTML="Wind:"+" "+data.wind.speed+"Km/h";
+    var X=document.getElementById('temperature').innerHTML=data.main.temp;
+    var celcius=273;
+    var temp=document.getElementById("temperature").innerHTML=Number(X-celcius).toFixed(2);
+    document.getElementById("temperature").innerHTML="Temperature:"+temp+"&deg"+"C";
+    document.getElementById("temp").innerHTML=temp+"&deg"+"C";
+    document.getElementById('cloud').innerHTML="<span><i class='fas fa-cloud'></i></span>";
+    document.getElementById('main2').innerHTML=data.weather[0].main;
+    document.getElementById('description').innerHTML=data.weather[0].description;
+    document.getElementById('pressure').innerHTML="Pressure:"+" "+ data.main.pressure+"hPa";
+    document.getElementById('timezone').innerHTML="Timezone:"+" "+ data.timezone;
+    document.getElementById('lat').innerHTML="Latitude:"+" "+ data.coord.lat;
+    document.getElementById('lon').innerHTML="Lontitude:"+" "+ data.coord.lon;
+  
+}
+
+    </script>
+    <script src="jquery.js"></script>
+    <script src="popper.js"></script>
+    <script src="bootstrap.min.js"></script>
+</body>
+</html>
